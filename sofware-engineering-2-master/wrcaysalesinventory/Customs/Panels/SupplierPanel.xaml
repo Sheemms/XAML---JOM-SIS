@@ -1,0 +1,144 @@
+﻿<Grid x:Class="wrcaysalesinventory.Customs.Panels.SupplierPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:wrcaysalesinventory.Customs.Panels"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:langs="clr-namespace:wrcaysalesinventory.Properties.Langs" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+             DataContext="{Binding SupplierPanelView, Source={StaticResource Locator}}"
+             d:DesignHeight="800"
+             d:DesignWidth="1400"
+             Margin="30 10">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="65"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+        <TextBlock Text="Suppliers"
+                    FontSize="32"
+                    FontWeight="Light"
+                    VerticalAlignment="Center"/>
+        <Border BorderThickness="0 0 0 1"
+                BorderBrush="{StaticResource BorderBrush}"/>
+    </Grid>
+    <Grid Grid.Row="1"
+          Margin="0 10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="65"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0 0 0 1">
+            <hc:FlexPanel 
+                          JustifyContent="SpaceBetween">
+                <StackPanel Orientation="Horizontal">
+                    <hc:SearchBar IsRealTime="True"
+                                  hc:InfoElement.Placeholder="{x:Static langs:Lang.LabelSearchRecord}"
+                                  Width="280"
+                                  Height="50"
+                                  FontSize="16"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Style="{StaticResource SearchBarExtend}"
+                                  Command="{Binding SearchCmd}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                    <hc:ComboBox HorizontalAlignment="Stretch"
+                                 hc:BorderElement.CornerRadius="0"
+                                 Height="50"
+                                 Width="200"
+                                 IsEditable="True"
+                                 FontSize="16"
+                                 ItemsSource="{Binding StatusDataList}"
+                                 SelectedValuePath="ID"
+                                 DisplayMemberPath="StatusName"
+                                 hc:InfoElement.Placeholder="Filter By Status"
+                                 Margin="10 0 0 0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterStatusCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=hc:ComboBox}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </hc:ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Height="50">
+                        <hc:Pagination MaxPageCount="5"
+                                       PageIndex="1"
+                                       MaxPageInterval="3"
+                                       FontSize="16"
+                                       DataCountPerPage="30"
+                                       VerticalAlignment="Center"
+                                       hc:BorderElement.CornerRadius="0"
+                                       Margin="0 0 12 0"
+                                       AutoHiding="True"
+                                       x:Name="PagerPagination"
+                                       PageUpdated="PagerPagination_PageUpdated"/>
+                    </Viewbox>
+                    <Button hc:BorderElement.CornerRadius="0"
+                            BorderThickness="1"
+                            FontSize="16"
+                            BorderBrush="{StaticResource DarkMaskBrush}"
+                            Content="{x:Static langs:Lang.LabelAdd}"
+                            Height="50"
+                            Width="130"
+                            Command="{Binding OpenSupplier}"
+                            VerticalAlignment="Center"/>
+                </StackPanel>
+
+            </hc:FlexPanel>
+        </Border>
+        <DataGrid hc:Empty.ShowEmpty="True"
+                  BorderThickness="0"
+                  BorderBrush="{x:Null}"
+                  IsReadOnly="True"
+                  CanUserResizeColumns="False"
+                  AutoGenerateColumns="False"
+                  Grid.Row="1"
+                  Padding="0"
+                  FontSize="16"
+                  ItemsSource="{Binding DataList}"
+                  hc:DataGridAttach.ApplyDefaultStyle="True"
+                  Margin="0 15 0 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Supplier Name"
+                                    Binding="{Binding SupplierName}"
+                                    Width="*"/>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Phone Number"
+                                    Binding="{Binding PhoneNumber}"
+                                    Width="*"/>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Address"
+                                    Binding="{Binding Address}"
+                                    Width="*"/>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Status"
+                                    Binding="{Binding Status}"
+                                    Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{Binding StatusColor}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Date Created"
+                                    Binding="{Binding DateAdded}"
+                                    Width="*"/>
+                <DataGridTextColumn FontSize="15"
+                                    Header="Date Updated"
+                                    Binding="{Binding DateUpdated}"
+                                    Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Grid>
